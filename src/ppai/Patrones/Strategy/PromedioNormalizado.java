@@ -1,13 +1,25 @@
 package ppai.Patrones.Strategy;
 
-import ppai.Patrones.Strategy.IMetodoEstadistico;
 import ppai.Entidades.Factura;
-import java.util.List;
+import ppai.Patrones.Iterator.Iterator;
+import ppai.Patrones.Iterator.IteratorFacturas;
 
-public class PromedioNormalizado implements IMetodoEstadistico {
+public class PromedioNormalizado implements IStrategyMetodoEstadistico {
 
     @Override
-    public double realizarCalculo(List<Factura> facturas) {
-       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
+    public double realizarCalculo(Factura[] facturas) {
+        double promedio = 0, normalizacion = 0;
+        Iterator it = new IteratorFacturas(facturas);
+        it.primero();
+
+        while (!it.haTerminado()) {
+            Factura actual = (Factura) it.actual();
+            normalizacion += actual.calcularTotal() / (actual.getDiasDeLecturaFacturados() * 30);
+            it.siguiente();
+        }
+        if(facturas.length > 0) {
+            promedio = normalizacion / facturas.length;
+        }
+        return promedio;
     }
 }

@@ -61,7 +61,7 @@ public class Propiedad {
     public List<Factura> buscarFacturasXPeriodo(Date fechaDesde, Date fechaHasta, String nomZona, String nomCategoria) {
         List<Factura> facturas = new ArrayList<>();
 
-        Iterator it = crearIterador(this.servicios);
+        Iterator it = new IteratorServicios(this.servicios);
         it.primero();
         while (!it.haTerminado()) {
             Servicio actual = (Servicio) it.actual();
@@ -72,10 +72,6 @@ public class Propiedad {
         }
 
         return facturas;
-    }
-
-    private Iterator crearIterador(Servicio[] servicios) {
-        return new IteratorServicios(servicios);
     }
 
     public boolean esDeZona(String nombreZona){

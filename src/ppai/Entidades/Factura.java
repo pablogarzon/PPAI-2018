@@ -21,5 +21,19 @@ public class Factura {
     public boolean sosDePeriodoLectura(Date fechaDesde, Date fechaHasta){
         return this.lectura.esDePeriodo(fechaDesde, fechaHasta);
     }
+
+    /**
+     * @return the diasDeLecturaFacturados
+     */
+    public int getDiasDeLecturaFacturados() {
+        return diasDeLecturaFacturados;
+    }
+
+    /**
+     * @param diasDeLecturaFacturados the diasDeLecturaFacturados to set
+     */
+    public void setDiasDeLecturaFacturados(int diasDeLecturaFacturados) {
+        this.diasDeLecturaFacturados = diasDeLecturaFacturados;
+    }
     
 }

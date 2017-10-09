@@ -8,6 +8,7 @@ public class Lectura {
     private double valorCorregido;
     private double valorLectura;
     
+    //fechaDesde < fechaHoraLectura < fechaHasta
     public boolean esDePeriodo(Date fechaDesde, Date fechaHasta){
         return fechaHoraLectura.after(fechaDesde) && fechaHoraLectura.before(fechaHasta);
     }

@@ -1,15 +1,14 @@
 package ppai.Patrones.Strategy;
 
 import ppai.Entidades.Factura;
-import java.util.List;
+import ppai.Patrones.Iterator.Iterator;
+import ppai.Patrones.Iterator.IteratorFacturas;
 
-public class MediaConDesviacionEstandard implements IMetodoEstadistico {
+public class MediaConDesviacionEstandard implements IStrategyMetodoEstadistico {
 
     @Override
-    public double realizarCalculo(List<Factura> facturas) {
-     double media = 0;
-     
-     return media;
+    public double realizarCalculo(Factura[] facturas) {
+     return 0;
     }
 
 }

@@ -1,10 +1,11 @@
 package ppai.Controlador;
 
 import java.util.ArrayList;
-import ppai.Entidades.*;
-import ppai.Patrones.Iterator.*;
 import java.util.Date;
 import java.util.List;
+import ppai.Entidades.*;
+import ppai.Patrones.Iterator.*;
+import ppai.Patrones.Strategy.*;
 
 public class GestorEstadisticaConsumo {
 
@@ -13,7 +14,7 @@ public class GestorEstadisticaConsumo {
     private final Localidades[] localidades;
     private Zonas[] zonas;
     private Propiedad[] propiedades;
-    private List<Factura> facturasPeriodo;
+    private Factura[] facturasPeriodo;
     private int metodoEstadistico;
 
     public GestorEstadisticaConsumo() {
@@ -28,17 +29,17 @@ public class GestorEstadisticaConsumo {
         Zonas[] zonas3 = {new Zonas("z4"), new Zonas("z5"), new Zonas("z6"), new Zonas("z7")};
 
         this.localidades = new Localidades[]{
-            new Localidades("Arroyito", zonas1), 
-            new Localidades("Carlos Paz", zonas2), 
+            new Localidades("Arroyito", zonas1),
+            new Localidades("Carlos Paz", zonas2),
             new Localidades("Córdoba", zonas3)
         };
     }
-    
+
     public void tomarFechasPeriodo(Date fechaDesde, Date fechaHasta) {
         this.fechaDesde = fechaDesde;
         this.fechaHasta = fechaHasta;
     }
-    
+
     public void tomarSeleccionOpcEstadisticaConsumo(int metodoEstadistico) {
         this.metodoEstadistico = metodoEstadistico;
     }
@@ -88,21 +89,38 @@ public class GestorEstadisticaConsumo {
     }
 
     public void tomarConfirmacionGeneracionReporte() {
+        buscarFacturas();
+        IStrategyMetodoEstadistico metodoEstadistico;
+        switch (this.metodoEstadistico) {
+            case 1:
+                metodoEstadistico = new MediaConDesviacionEstandard();
+                break;
+            case 2:
+                metodoEstadistico = new PromedioNormalizado();
+                break;
+            default:
+                metodoEstadistico = new Sumatoria();
+        }
+        metodoEstadistico.realizarCalculo(facturasPeriodo);
+        
+    }
+
+    private void buscarFacturas() {
         Iterator itZonas = new IteratorZonas(zonas);
         itZonas.primero();
-        
+
         while (!itZonas.haTerminado()) {
             Zonas actualZona = (Zonas) itZonas.actual();
-            
+
             Iterator itCat = new IteratorCategorias(categorias);
             itCat.primero();
-            
+
             while (!itCat.haTerminado()) {
                 Categorias actualCat = (Categorias) itCat.actual();
                 buscarFacturasAsociadasALecturaPeriodo(actualZona.getNombre(), actualCat.getNombre());
                 itCat.primero();
             }
-            
+
             itZonas.siguiente();
         }
     }
@@ -122,7 +140,7 @@ public class GestorEstadisticaConsumo {
             Propiedad actual = (Propiedad) it.actual();
             if (actual.esDeZona(zona)) {
                 List<Factura> facturas = actual.buscarFacturasXPeriodo(fechaDesde, fechaHasta, zona, categoria);
-                facturasPeriodo.addAll(facturas);
+                facturasPeriodo = facturas.toArray(new Factura[facturas.size()]);
             }
             it.siguiente();
         }

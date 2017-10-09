@@ -1,12 +1,22 @@
 package ppai.Patrones.Strategy;
 
 import ppai.Entidades.Factura;
-import java.util.List;
+import ppai.Patrones.Iterator.Iterator;
+import ppai.Patrones.Iterator.IteratorFacturas;
 
-public class Sumatoria implements IMetodoEstadistico { 
+public class Sumatoria implements IStrategyMetodoEstadistico {
 
     @Override
-    public double realizarCalculo(List<Factura> facturas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double realizarCalculo(Factura[] facturas) {
+        double suma = 0;
+        Iterator it = new IteratorFacturas(facturas);
+        it.primero();
+
+        while (!it.haTerminado()) {
+            Factura actual = (Factura) it.actual();
+            suma += actual.calcularTotal();
+            it.siguiente();
+        }
+        return suma;
     }
 }
