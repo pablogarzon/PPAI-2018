@@ -1,26 +1,3 @@
-/*
- * The MIT License
- *
- * Copyright 2017 grupo 11.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 package ppai.Controlador;
 
 import java.util.ArrayList;
@@ -46,25 +23,24 @@ public class GestorEstadisticaConsumo {
         c2.setNombre("No Resindenciales");
         categorias = new Categorias[]{c1, c2};
 
-        Zonas[] zonas1 = {new Zonas("z1"), new Zonas("z2"), new Zonas("z3")};
-        Zonas[] zonas2 = {new Zonas("z4"), new Zonas("z5"), new Zonas("z6")};
+        Zonas[] zonas1 = {new Zonas("z1")};
+        Zonas[] zonas2 = {new Zonas("z2"), new Zonas("z3")};
+        Zonas[] zonas3 = {new Zonas("z4"), new Zonas("z5"), new Zonas("z6"), new Zonas("z7")};
 
-        this.localidades = new Localidades[]{new Localidades("Arroyito", zonas1), new Localidades("Carlos Paz", zonas2)};
+        this.localidades = new Localidades[]{
+            new Localidades("Arroyito", zonas1), 
+            new Localidades("Carlos Paz", zonas2), 
+            new Localidades("Córdoba", zonas3)
+        };
     }
-
-    //solo sirve para ejecutar desde consola
-    public void tomarSelecciionOpcEstadisticaConsumo() {
-        System.out.println("Opción Estadistica de Consumo");
-    }
-
-    //solo sirve para ejecutar desde consola
-    public void solicitarPeriodoConsumo() {
-        System.out.println("ingrese el periodo de consumo");
-    }
-
+    
     public void tomarFechasPeriodo(Date fechaDesde, Date fechaHasta) {
         this.fechaDesde = fechaDesde;
         this.fechaHasta = fechaHasta;
+    }
+    
+    public void tomarSeleccionOpcEstadisticaConsumo(int metodoEstadistico) {
+        this.metodoEstadistico = metodoEstadistico;
     }
 
     public String[] buscarCategorias() {
@@ -83,12 +59,10 @@ public class GestorEstadisticaConsumo {
     }
 
     /**
-     * recorre las localidades buscando el nombre de la localidad y las zonas
-     * que contiene
+     * recorre las localidades y las zonas que contienen
      *
      * @param filtro
-     * @return un diccionario que tiene como clave el nombre de la localidad y
-     * como valor las zonas
+     * @return un array con localidades y sus zonas
      */
     public Localidades[] buscarZonasDeLocalidades(String filtro) {
         List<Localidades> zl = new ArrayList<>();
@@ -109,6 +83,30 @@ public class GestorEstadisticaConsumo {
         return zonasLocalidades;
     }
 
+    public void tomarSeleccionMetodoEstadistico(int opcMetodoEstadistico) {
+        this.metodoEstadistico = opcMetodoEstadistico;
+    }
+
+    public void tomarConfirmacionGeneracionReporte() {
+        Iterator itZonas = new IteratorZonas(zonas);
+        itZonas.primero();
+        
+        while (!itZonas.haTerminado()) {
+            Zonas actualZona = (Zonas) itZonas.actual();
+            
+            Iterator itCat = new IteratorCategorias(categorias);
+            itCat.primero();
+            
+            while (!itCat.haTerminado()) {
+                Categorias actualCat = (Categorias) itCat.actual();
+                buscarFacturasAsociadasALecturaPeriodo(actualZona.getNombre(), actualCat.getNombre());
+                itCat.primero();
+            }
+            
+            itZonas.siguiente();
+        }
+    }
+
     /**
      * obtiene las facturas asociadas al periodo recorriendo las propiedades y
      * consulta si pertenece a la zona seleccionada
@@ -116,7 +114,7 @@ public class GestorEstadisticaConsumo {
      * @param zona
      * @param categoria
      */
-    public void tomarOpcFiltradoLocalidadConZona(String zona, String categoria) {
+    private void buscarFacturasAsociadasALecturaPeriodo(String zona, String categoria) {
         Iterator it = new IteratorPropiedades(this.propiedades);
         it.primero();
 
@@ -128,18 +126,5 @@ public class GestorEstadisticaConsumo {
             }
             it.siguiente();
         }
-
-    }
-
-    public void tomarSeleccionMetodoEstadistico(int opcMetodoEstadistico) {
-        this.metodoEstadistico = opcMetodoEstadistico;
-    }
-
-    public void tomarConfirmacionGeneracionReporte() {
-        buscarFacturasAsociadasALecturaPeriodo();
-    }
-
-    private void buscarFacturasAsociadasALecturaPeriodo() {
-
     }
 }

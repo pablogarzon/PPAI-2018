@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ppai;
 
 import ppai.Controlador.GestorEstadisticaConsumo;
@@ -13,11 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import ppai.Entidades.Localidades;
+import ppai.Entidades.Zonas;
 
-/**
- *
- * @author notebook
- */
 public class PPAI {
 
     /**
@@ -43,12 +36,22 @@ public class PPAI {
         }
     }
 
+    private static int solicitarSeleccionOpcFiltrado() {
+        System.out.println("\nSeleccione una opcion de filtrado");
+        System.out.println("1- Sumatoria");
+        System.out.println("2- Promedio Normalizado");
+        System.out.println("3- Media con desviación estandard");
+        System.out.print("\nseleccionada: ");
+        int seleccion = sc.nextInt();
+        return seleccion;
+    }
+
     public static void main(String[] args) {
         // TODO code application logic here
         GestorEstadisticaConsumo gestor = new GestorEstadisticaConsumo();
 
         do {
-            gestor.solicitarPeriodoConsumo();
+            System.out.println("ingrese el periodo de consumo");
         } while (!validarFechas());
 
         gestor.tomarFechasPeriodo(fechaDesde, fechaHasta);
@@ -59,22 +62,32 @@ public class PPAI {
         String seleccionada = "";
         boolean ingresoEnd = false;
 //        do {
-            System.out.println("Seleccione una categoria:");
-            System.out.println("Todas");
-            for (int i = 0; i < cats.length; i++) {
-                System.out.println(cats[i]);
-            }
-            System.out.print("\nseleccionada: ");
-            seleccionada = sc.nextLine();
-            System.out.println("");
-            
+        System.out.println("Seleccione una categoria:");
+        System.out.println("Todas");
+        for (int i = 0; i < cats.length; i++) {
+            System.out.println(cats[i]);
+        }
+        System.out.print("\nseleccionada: ");
+        seleccionada = sc.nextLine();
+        System.out.println("");
+
 //            ingresoEnd = seleccionada.equals("end");
 //            if(!ingresoEnd) catSeleccionadas.add(seleccionada);
 //        } while (!ingresoEnd);
-        
         //String[] seleccionadas = catSeleccionadas.toArray(new String[catSeleccionadas.size()]);
+        Localidades[] localidades =gestor.buscarZonasDeLocalidades("Todas");
         
-        gestor.buscarZonasDeLocalidades("Todas");
+        System.out.println("Localidades:");
+        for (Localidades localidad : localidades) {
+            System.out.println("\t" + localidad.getNombre());
+            System.out.println("\tzonas:");
+            for (Zonas zona : localidad.getZonas()) {
+                System.out.println("\t\t" + zona.getNombre());
+            }
+        }
+        
+        gestor.tomarSeleccionOpcEstadisticaConsumo(solicitarSeleccionOpcFiltrado());
+        gestor.tomarConfirmacionGeneracionReporte();
     }
 
 }

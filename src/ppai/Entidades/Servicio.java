@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ppai.Entidades;
 
 import java.util.ArrayList;
@@ -10,10 +5,6 @@ import java.util.Date;
 import java.util.List;
 import ppai.Patrones.Iterator.*;
 
-/**
- *
- * @author notebook
- */
 public class Servicio {
 
     private Date fechaAlta;
@@ -22,7 +13,7 @@ public class Servicio {
     private Categorias categoria;
 
     public List<Factura> buscarFacturasXPeriodo(Date fechaDesde, Date fechaHasta) {
-        Iterator it = crearIterador(this.facturas);
+        Iterator it = new IteratorFacturas(this.facturas);
         List<Factura> listFacturas = new ArrayList<>();
         it.primero();
         while (!it.haTerminado()) {
@@ -34,10 +25,6 @@ public class Servicio {
         }
 
         return listFacturas;
-    }
-
-    private Iterator crearIterador(Object[] elements) {
-        return new IteratorFacturas(elements);
     }
 
     public boolean esDeCategoria(String nomCategoria) {

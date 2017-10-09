@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ppai.Entidades;
 
 import ppai.Patrones.Iterator.Iterator;
 import ppai.Patrones.Iterator.IteratorZonas;
 
-/**
- *
- * @author notebook
- */
 public class Localidades {
     private int id;
     private String Nombre;
