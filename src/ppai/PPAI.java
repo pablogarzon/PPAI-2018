@@ -76,7 +76,7 @@ public class PPAI {
 //        } while (!ingresoEnd);
         //String[] seleccionadas = catSeleccionadas.toArray(new String[catSeleccionadas.size()]);
         Localidades[] localidades = gestor.buscarZonasDeLocalidades("Todas");
-
+        
         System.out.println("Localidades:");
         for (Localidades localidad : localidades) {
             System.out.println("\t" + localidad.getNombre());
@@ -87,7 +87,7 @@ public class PPAI {
         }
 
         gestor.tomarSeleccionOpcEstadisticaConsumo(solicitarSeleccionOpcFiltrado());
-        gestor.tomarConfirmacionGeneracionReporte();
+        gestor.tomarConfirmacionGeneracionReporte(localidades);
     }
 
 }

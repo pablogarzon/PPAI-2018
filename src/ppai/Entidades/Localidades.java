@@ -4,7 +4,6 @@ import ppai.Patrones.Iterator.Iterator;
 import ppai.Patrones.Iterator.IteratorZonas;
 
 public class Localidades {
-    private int id;
     private String Nombre;
     private Zonas[] zonas;
 

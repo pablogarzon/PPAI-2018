@@ -12,7 +12,6 @@ public class GestorEstadisticaConsumo {
     private Date fechaDesde, fechaHasta;
     private final Categorias[] categorias;
     private final Localidades[] localidades;
-    private Zonas[] zonas;
     private Propiedad[] propiedades;
     private Factura[] facturasPeriodo;
     private int metodoEstadistico;
@@ -88,8 +87,8 @@ public class GestorEstadisticaConsumo {
         this.metodoEstadistico = opcMetodoEstadistico;
     }
 
-    public void tomarConfirmacionGeneracionReporte() {
-        buscarFacturas();
+    public void tomarConfirmacionGeneracionReporte(Localidades[] localidades) {
+        buscarFacturas(localidades);
         IStrategyMetodoEstadistico metodoEstadistico;
         switch (this.metodoEstadistico) {
             case 1:
@@ -102,26 +101,32 @@ public class GestorEstadisticaConsumo {
                 metodoEstadistico = new Sumatoria();
         }
         metodoEstadistico.realizarCalculo(facturasPeriodo);
-        
+
     }
 
-    private void buscarFacturas() {
-        Iterator itZonas = new IteratorZonas(zonas);
-        itZonas.primero();
+    private void buscarFacturas(Localidades[] localidades) {
+        Iterator itLocalidades = new IteratorLocalidades(localidades);
+        Iterator itZonas;
+        itLocalidades.primero();
+        while (!itLocalidades.haTerminado()) {
+            Localidades localidad = (Localidades) itLocalidades.actual();
+            itZonas = new IteratorZonas(localidad.getZonas());
+            itZonas.primero();
+            
+            while (!itZonas.haTerminado()) {
+                Zonas actualZona = (Zonas) itZonas.actual();
 
-        while (!itZonas.haTerminado()) {
-            Zonas actualZona = (Zonas) itZonas.actual();
-
-            Iterator itCat = new IteratorCategorias(categorias);
-            itCat.primero();
-
-            while (!itCat.haTerminado()) {
-                Categorias actualCat = (Categorias) itCat.actual();
-                buscarFacturasAsociadasALecturaPeriodo(actualZona.getNombre(), actualCat.getNombre());
+                Iterator itCat = new IteratorCategorias(categorias);
                 itCat.primero();
-            }
 
-            itZonas.siguiente();
+                while (!itCat.haTerminado()) {
+                    Categorias actualCat = (Categorias) itCat.actual();
+                    buscarFacturasAsociadasALecturaPeriodo(actualZona.getNombre(), actualCat.getNombre());
+                    itCat.primero();
+                }
+
+                itZonas.siguiente();
+            }
         }
     }
 
